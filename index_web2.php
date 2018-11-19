@@ -13,92 +13,141 @@
             include "formulario_web2.php";
 
             function codigoClienteExiste($codCliente) {
+                
+                echo "Prueba 1";
 
+//                $dwes = new mysqli('localhost', 'root', '', 'telefonia');
+//                $error = $dwes->connect_errno;
+//
+//                if ($error == null) {
+//
+//                    $valorMaxClientes = $dwes->query("SELECT * FROM clientes WHERE codigo_cliente=$codCliente");
+//
+//                    if ($valorMaxClientes) {
+//                        $existe = true;
+//                    } else {
+//                        $existe = false;
+//                    }
+//
+//                    $dwes->close();
+//                }
+                
                 $existe = false;
 
-                $dwes = new mysqli('localhost', 'root', '', 'telefonia');
-                $error = $dwes->connect_errno;
+                $pdo = new PDO('mysql:host=localhost;dbname=telefonia', 'root', '');
+                $resultado = $pdo->query("SELECT * FROM clientes WHERE codigo_cliente='$codCliente'");
 
-                if ($error == null) {
+                if ($resultado) {
 
-                    $valorMaxClientes = $dwes->query("SELECT * FROM clientes WHERE codigo_cliente=$codCliente");
-
-                    if ($valorMaxClientes) {
-                        $existe = true;
-                    } else {
-                        $existe = false;
-                    }
-
-                    $dwes->close();
+                    $existe = true;
                 }
 
                 return $existe;
             }
 
             function numeroSimExiste($numeroSim) {
+                
+                echo "Prueba 2";
 
-                $existe = false;
+//                $dwes = new mysqli('localhost', 'root', '', 'telefonia');
+//                $error = $dwes->connect_errno;
+//
+//                if ($error == null) {
+//
+//                    $valorMaxClientes = $dwes->query("SELECT * FROM tarjetas_telefonicas WHERE numero_sim=$numeroSim");
+//
+//                    if ($valorMaxClientes) {
+//                        $existe = true;
+//                    } else {
+//                        $existe = false;
+//                    }
+//
+//                    $dwes->close();
+//                }
+                
+                 $existe = false;
 
-                $dwes = new mysqli('localhost', 'root', '', 'telefonia');
-                $error = $dwes->connect_errno;
+                $pdo = new PDO('mysql:host=localhost;dbname=telefonia', 'root', '');
+                $resultado = $pdo->query("SELECT * FROM tarjetas_telefonicas WHERE numero_sim='$numeroSim'");
 
-                if ($error == null) {
+                if ($resultado) {
 
-                    $valorMaxClientes = $dwes->query("SELECT * FROM tarjetas_telefonicas WHERE numero_sim=$numeroSim");
-
-                    if ($valorMaxClientes) {
-                        $existe = true;
-                    } else {
-                        $existe = false;
-                    }
-
-                    $dwes->close();
+                    $existe = true;
                 }
 
                 return $existe;
             }
 
             function getTarjetasSIM($codCliente) {
+                
+                echo "Prueba 3";
 
-                $dwes = new mysqli('localhost', 'root', '', 'telefonia');
-                $error = $dwes->connect_errno;
+//                $dwes = new mysqli('localhost', 'root', '', 'telefonia');
+//                $error = $dwes->connect_errno;
+//
+//                if ($error == null) {
+//
+//                    $tarjetasSIM = $dwes->query("SELECT numero_sim FROM tarjetas_telefonicas WHERE codigo_cliente_asociado = '$codCliente'");
+//
+//                    $dwes->close();
+//                }
 
-                if ($error == null) {
+                if (codigoClienteExiste($codCliente) == true) {
 
-                    $tarjetasSIM = $dwes->query("SELECT numero_sim FROM tarjetas_telefonicas WHERE codigo_cliente_asociado = '$codCliente'");
+                    $pdo = new PDO('mysql:host=localhost;dbname=telefonia', 'root', '');
+                    $resultado = $pdo->query("SELECT numero_sim FROM tarjetas_telefonicas WHERE codigo_cliente_asociado = '$codCliente'");
 
-                    $dwes->close();
+                    while ($fila = $resultado->fetch()) {
+
+                        echo $fila['numero_sim'] . "<br/>";
+                    }
+                    
+                } else {
+
+                    echo "No existe el código de cliente indicado";
                 }
             }
-            
-            function getNrosLlamados($nroSIM){
+
+            function getNrosLlamados($nroSIM) {
                 
-                $dwes = new mysqli('localhost', 'root', '', 'telefonia');
-                $error = $dwes->connect_errno;
+                echo "Prueba 4";
 
-                if ($error == null) {
+//                $dwes = new mysqli('localhost', 'root', '', 'telefonia');
+//                $error = $dwes->connect_errno;
+//
+//                if ($error == null) {
+//
+//                    $numerosLlamados = $dwes->query("SELECT numero_llamado FROM llamadas_emitidas WHERE sim_llamante='$nroSIM'");
+//
+//                    $dwes->close();
+//                }
 
-                    $numerosLlamados = $dwes->query("SELECT numero_llamado FROM llamadas_emitidas WHERE sim_llamante='$nroSIM'");
+                if (numeroSimExiste($nroSIM) == true) {
 
-                    $dwes->close();
+                    $pdo = new PDO('mysql:host=localhost;dbname=telefonia', 'root', '');
+                    $resultado = $pdo->query("SELECT numero_llamado FROM llamadas_emitidas WHERE sim_llamante='$nroSIM'");
+
+                    while ($fila = $resultado->fetch()) {
+                        echo sizeof($fila);
+
+                        echo $fila['numero_llamado'] . "<br/>";
+                    }
                 }
-                
             }
 
             if (isset($_POST['introCliente'])) {
-                
+
                 $codigo = $_POST['codcliente'];
                 getTarjetasSIM($codigo);
-                
             }
-            
+
             if (isset($_POST['introSIM'])) {
                 
+                echo "Entro";
+
                 $numSIM = $_POST['numsim'];
                 getNrosLlamados($numSIM);
-                
             }
-            
         }
         ?>
 
