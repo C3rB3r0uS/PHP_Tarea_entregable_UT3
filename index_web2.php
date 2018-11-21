@@ -14,7 +14,7 @@
 
             function codigoClienteExiste($codCliente) {
                 
-                echo "Prueba 1";
+                //echo "Prueba 1 <br/>";
 
 //                $dwes = new mysqli('localhost', 'root', '', 'telefonia');
 //                $error = $dwes->connect_errno;
@@ -45,9 +45,7 @@
                 return $existe;
             }
 
-            function numeroSimExiste($numeroSim) {
-                
-                echo "Prueba 2";
+            function numeroSimExiste($numeroSim) {  
 
 //                $dwes = new mysqli('localhost', 'root', '', 'telefonia');
 //                $error = $dwes->connect_errno;
@@ -79,8 +77,6 @@
             }
 
             function getTarjetasSIM($codCliente) {
-                
-                echo "Prueba 3";
 
 //                $dwes = new mysqli('localhost', 'root', '', 'telefonia');
 //                $error = $dwes->connect_errno;
@@ -91,6 +87,8 @@
 //
 //                    $dwes->close();
 //                }
+                
+                echo "<h3>Lista de tarjetas SIM del cliente $codCliente</h3>";
 
                 if (codigoClienteExiste($codCliente) == true) {
 
@@ -109,9 +107,7 @@
             }
 
             function getNrosLlamados($nroSIM) {
-                
-                echo "Prueba 4";
-
+    
 //                $dwes = new mysqli('localhost', 'root', '', 'telefonia');
 //                $error = $dwes->connect_errno;
 //
@@ -123,13 +119,13 @@
 //                }
 
                 if (numeroSimExiste($nroSIM) == true) {
+                    
+                    echo "<h3>Lista de llamadas realizadas por la tarjeta SIM $nroSIM</h3>";
 
                     $pdo = new PDO('mysql:host=localhost;dbname=telefonia', 'root', '');
                     $resultado = $pdo->query("SELECT numero_llamado FROM llamadas_emitidas WHERE sim_llamante='$nroSIM'");
 
-                    while ($fila = $resultado->fetch()) {
-                        echo sizeof($fila);
-
+                    while ($fila = $resultado->fetch()) {              
                         echo $fila['numero_llamado'] . "<br/>";
                     }
                 }
@@ -142,8 +138,6 @@
             }
 
             if (isset($_POST['introSIM'])) {
-                
-                echo "Entro";
 
                 $numSIM = $_POST['numsim'];
                 getNrosLlamados($numSIM);
